@@ -1,0 +1,1 @@
+CATEGORIES= [('Glaces',), ('Yaourts',), ('Brownies',), ('Salades',)]
