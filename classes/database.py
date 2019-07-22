@@ -118,7 +118,7 @@ class Database:
         return self.mycursor.fetchall()
 
     def get_products_by_category(self, category, page):
-        """get all the product"""
+        """get 10 products from the given category"""
         query = "SELECT * FROM Products " +\
                 "INNER JOIN Categories " +\
                 "ON Categories.id = Products.category_id " +\
@@ -162,6 +162,19 @@ class Database:
                 "CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES Products(id)" +\
                 ")"
         self.mycursor.execute(query)
+
+    def get_best_alternative(self, product):
+        """find the best alternative product for the given product"""
+        query = "SELECT * FROM Products " +\
+                "INNER JOIN Categories " +\
+                "ON Products.category_id = Categories.id " +\
+                "WHERE Categories.id = %s " +\
+                "AND Products.nutriscore < %s " +\
+                "ORDER BY Products.nutriscore " +\
+                "LIMIT 1"
+        data = (product[5], product[2])
+        self.mycursor.execute(query, data)
+        return self.mycursor.fetchone()
 
     def insert_alternative(self, data):
         """Add the substitute product to the database
