@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# coding: utf-8
+
 from classes.display import Display
 
 class Main:

@@ -155,8 +155,8 @@ class Database:
         query = "CREATE TABLE IF NOT EXISTS Alternatives" +\
                 "(id INTEGER(2) PRIMARY KEY NOT NULL AUTO_INCREMENT," +\
                 "name VARCHAR (155) NOT NULL," +\
-                "codebar BIGINT (13) NOT NULL," +\
                 "url VARCHAR(255) NOT NULL," +\
+                "image_url VARCHAR(255) NOT NULL," +\
                 "nutriscore INTEGER(2) NOT NULL," +\
                 "product_id INTEGER (2) NOT NULL UNIQUE," +\
                 "CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES Products(id)" +\
@@ -185,9 +185,9 @@ class Database:
         try:
             self.mycursor.execute(query, data)
             self.connector.commit()
-            print("Le produit :", data[0], "a bien été enregistré")
+            return True
         except mysql.connector.errors.IntegrityError:
-            print("Ce produit a déjà été enregistré")
+            return False
 
     def get_saved_alternative(self, product):
         """get the substitution of the given product"""
@@ -199,6 +199,7 @@ class Database:
     #Method to insert data got from the api to insert them into products table
 
     def insert_products_from_api(self):
+        """Insert product of each category in the database"""
         api = Api()
         for index, category in enumerate(CATEGORIES):
             products = api.get_products(category)
