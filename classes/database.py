@@ -2,9 +2,9 @@
 and the CONSTANT var required
 """
 import mysql.connector
-from .api import Api
 from config import CATEGORIES
 from secret import HOST, USER, PASSWD
+from .api import Api
 
 class Database:
     """This class is used for every iteraction with the database,
@@ -129,8 +129,8 @@ class Database:
         return self.mycursor.fetchall()
 
     def get_product(self, prod_id):
-        """get the id of an product"""
-        query = "SELECT * FROM Products WHERE id = %s AND category_id = %s"
+        """get a product from his id"""
+        query = "SELECT * FROM Products WHERE id = %s"
         data = (prod_id, )
         self.mycursor.execute(query, data)
         return self.mycursor.fetchone()
@@ -155,22 +155,22 @@ class Database:
         query = "CREATE TABLE IF NOT EXISTS Alternatives" +\
                 "(id INTEGER(2) PRIMARY KEY NOT NULL AUTO_INCREMENT," +\
                 "name VARCHAR (155) NOT NULL," +\
-                "url VARCHAR(255) NOT NULL," +\
-                "image_url VARCHAR(255) NOT NULL," +\
                 "nutriscore INTEGER(2) NOT NULL," +\
-                "product_id INTEGER (2) NOT NULL UNIQUE," +\
+                "image_url VARCHAR(255) NOT NULL," +\
+                "url VARCHAR(255) NOT NULL," +\
+                "product_id INTEGER (2) NOT NULL," +\
                 "CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES Products(id)" +\
                 ")"
         self.mycursor.execute(query)
 
     def get_best_alternative(self, product):
-        """find the best alternative product for the given product"""
+        """find a alternative product for the given product"""
         query = "SELECT * FROM Products " +\
                 "INNER JOIN Categories " +\
                 "ON Products.category_id = Categories.id " +\
                 "WHERE Categories.id = %s " +\
                 "AND Products.nutriscore < %s " +\
-                "ORDER BY Products.nutriscore " +\
+                "ORDER BY RAND(), Products.nutriscore " +\
                 "LIMIT 1"
         data = (product[5], product[2])
         self.mycursor.execute(query, data)
@@ -179,7 +179,7 @@ class Database:
     def insert_alternative(self, data):
         """Add the substitute product to the database
         the 'data parameter must be a tuple containing :
-        name, codebar, url, nutriscore, produit_id
+        name, nutriscore, image_url, url, product_id
         """
         query = "INSERT INTO Alternatives VALUES (NULL, %s, %s, %s, %s, %s)"
         try:
@@ -188,6 +188,19 @@ class Database:
             return True
         except mysql.connector.errors.IntegrityError:
             return False
+
+    def get_alternatives_by_category(self, category, page):
+        """get every alternatives from the given category"""
+        query = "SELECT * FROM Alternatives " +\
+                "INNER JOIN Products " +\
+                "ON Alternatives.product_id = Products.id " +\
+                "INNER JOIN Categories " +\
+                "ON Products.category_id = Categories.id " +\
+                "WHERE Categories.name = %s " +\
+                "LIMIT 10 OFFSET %s"
+        data = (category, (page-1)*10)
+        self.mycursor.execute(query, data)
+        return self.mycursor.fetchall()
 
     def get_saved_alternative(self, product):
         """get the substitution of the given product"""

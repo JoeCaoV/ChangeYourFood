@@ -2,8 +2,6 @@
 """Module requests required to use the API"""
 import requests
 
-from config import CATEGORIES
-
 class Api:
     """contain the methods to request the API"""
 
@@ -23,13 +21,13 @@ class Api:
         else:
             result = []
             for count, product in enumerate(products):
-                    try:
-                        product = (products[count]['product_name_fr'],
-                                   products[count]['nutriments']['nutrition-score-fr'],
-                                   products[count]['image_front_url'],
-                                   products[count]['url'])
-                    except (IndexError, KeyError):
-                        continue
-                    else:
-                        result.append(product)
+                try:
+                    product = (products[count]['product_name_fr'],
+                               products[count]['nutriments']['nutrition-score-fr'],
+                               products[count]['image_front_url'],
+                               products[count]['url'])
+                except (IndexError, KeyError):
+                    continue
+                else:
+                    result.append(product)
         return result

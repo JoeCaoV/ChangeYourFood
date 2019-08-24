@@ -1,11 +1,13 @@
+"""Import the parent class and the CONSTANTS"""
 import mysql.connector
-from .api import Api
-from .database import Database
-from config import CATEGORIES
 from secret import HOST, USER, PASSWD
+from .database import Database
 
 class TestDb(Database):
-
+    """Class heriting from Database, because I want to create a separate DB
+    for the tests, it will share the same methods to test, I just modify the name
+    of the DB created for the tests and add a method to delete it afterwards
+    """
     def __init__(self):
         """create the connector and create the database and
         all required elements if they don't exist yet
