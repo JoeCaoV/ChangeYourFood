@@ -17,6 +17,8 @@ also, please install the modules listed in the requirement.txt file.
 
 Start the program by executing with python the file 'app.py'
 
+If you're using it for the first time, you'll need to import product to the database simply by clicking on 'Import Products' on the scrolling menu on the left-top side of the application, it may take a few seconds to operate.
+
 Then simply follow the instructions in the terminal it will lead you to find a product and suggest you a better alternative
 you can save it if you wish. Then you can consult every products saved.
 
