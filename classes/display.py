@@ -222,8 +222,6 @@ class Display:
         return a positive message if it successed
         """
         self.save_button.destroy()
-        print(alternative)
-        print(product)
         data = (alternative[1], alternative[2], alternative[3],
                 alternative[4], product[0])
         result = self.database.insert_alternative(data)
