@@ -222,8 +222,10 @@ class Display:
         return a positive message if it successed
         """
         self.save_button.destroy()
-        data = (alternative[1], alternative[4], alternative[3],
-                alternative[2], product[0])
+        print(alternative)
+        print(product)
+        data = (alternative[1], alternative[2], alternative[3],
+                alternative[4], product[0])
         result = self.database.insert_alternative(data)
         if result:
             tk.Label(self.footer_frame_center, bg=self.bg_color, font=('Open Sans', 18),
